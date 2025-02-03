@@ -1,0 +1,62 @@
+name: Deploy to Ubuntu Server
+
+on:
+  push:
+    branches:
+      - Accounts
+      - Customers
+      - Dashboard
+      - Frontend
+      - Inventory
+      - Organization
+      - Purchase
+      - Report
+      - Sales
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to Server
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            cd ~/BillBizz
+            git pull origin $(git branch --show-current)
+
+            # Stop and remove old containers before deployment
+            docker stop billbizz-suppliers billbizz-staff billbizz-sales billbizz-report billbizz-purchase billbizz-organization billbizz-inventory billbizz-customers account-container || true
+            docker rm billbizz-suppliers billbizz-staff billbizz-sales billbizz-report billbizz-purchase billbizz-organization billbizz-inventory billbizz-customers account-container || true
+
+            # Build Docker images for each service
+            docker build -t billbizz-suppliers -f Dockerfile.suppliers .
+            docker build -t billbizz-staff -f Dockerfile.staff .
+            docker build -t billbizz-sales -f Dockerfile.sales .
+            docker build -t billbizz-report -f Dockerfile.report .
+            docker build -t billbizz-purchase -f Dockerfile.purchase .
+            docker build -t billbizz-organization -f Dockerfile.organization .
+            docker build -t billbizz-inventory -f Dockerfile.inventory .
+            docker build -t billbizz-customers -f Dockerfile.customers .
+            docker build -t account-container -f Dockerfile.accounts .
+
+            # Run new containers with correct ports
+            docker run -d --name billbizz-suppliers -p 5009:5009 billbizz-suppliers
+            docker run -d --name billbizz-staff -p 5008:5008 billbizz-staff
+            docker run -d --name billbizz-sales -p 5007:5007 billbizz-sales
+            docker run -d --name billbizz-report -p 5006:5006 billbizz-report
+            docker run -d --name billbizz-purchase -p 5005:5005 billbizz-purchase
+            docker run -d --name billbizz-organization -p 5004:5004 billbizz-organization
+            docker run -d --name billbizz-inventory -p 5003:5003 billbizz-inventory
+            docker run -d --name billbizz-customers -p 5002:5002 billbizz-customers
+            docker run -d --name account-container -p 5001:5001 account-container
+          EOF
