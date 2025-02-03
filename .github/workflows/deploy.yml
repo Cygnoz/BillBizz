@@ -3,7 +3,7 @@ name: Deploy to Ubuntu Server - All Branches
 on:
   push:
     branches:
-      - '*'
+      - '*'  # Trigger on all branches
 
 jobs:
   deploy:
@@ -22,22 +22,66 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          # Define unique port and Dockerfile based on the branch name
+          branch_name="${{ github.ref_name }}"
+          echo "Deploying for branch: $branch_name"
+
+          # Define unique port for each branch
+          case "$branch_name" in
+            "main")
+              port=5001
+              ;;
+            "Accounts")
+              port=5001
+              ;;
+            "Customers")
+              port=5002
+              ;;
+            "Inventory")
+              port=5003
+              ;;
+            "Organization")
+              port=5004
+              ;;
+            "Purchase")
+              port=5005
+              ;;
+            "Report")
+              port=5006
+              ;;
+            "Sales")
+              port=5007
+              ;;
+            "Staff")
+              port=5008
+              ;;
+            "Suppliers")
+              port=5009
+              ;;
+            *)
+              port=5006  # Default port for other branches
+              ;;
+          esac
+
+          echo "Using port: $port"
+
+          # SSH into the server and deploy the app
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
             cd ~/BillBizz
-            git pull origin ${{ github.ref_name }}
+            git pull origin $branch_name
 
             # Check if the container is already running, and stop & remove if it exists
-            if docker ps -q -f name=${{ github.ref_name }}-container; then
-              echo "Stopping and removing old ${{ github.ref_name }}-container..."
-              docker stop ${{ github.ref_name }}-container
-              docker rm ${{ github.ref_name }}-container
+            if docker ps -q -f name=${branch_name}-container; then
+              echo "Stopping and removing old ${branch_name}-container..."
+              docker stop ${branch_name}-container
+              docker rm ${branch_name}-container
             fi
 
             # Build the Docker image using the updated Dockerfile
-            echo "Building the ${{ github.ref_name }}-container image..."
-            docker build -t ${{ github.ref_name }}-container -f Dockerfile .
+            echo "Building the ${branch_name}-container image..."
+            docker build -t ${branch_name}-container -f Dockerfile .
 
-            # Run the new container with the correct port
-            echo "Deploying the new ${{ github.ref_name }}-container..."
-            docker run -d --name ${{ github.ref_name }}-container -p 5001:5001 ${{ github.ref_name }}-container
+            # Run the new container with the unique port
+            echo "Deploying the new ${branch_name}-container..."
+            docker run -d --name ${branch_name}-container -p $port:$port ${branch_name}-container
           EOF
