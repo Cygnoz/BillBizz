@@ -12,6 +12,7 @@ on:
       - Purchase
       - Report
       - Sales
+  workflow_dispatch:  # This allows you to manually trigger the workflow
 
 jobs:
   deploy:
