@@ -1,0 +1,25 @@
+name: Deploy to Hostinger FTP
+
+on:
+  push:
+    branches:
+      - dist  # Deploys only when you push to the `dist` branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          ref: dist  # Ensures the `dist` branch is used
+
+      - name: Deploy Files via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: "ftp://147.93.25.14"
+          username: "u568077109.darkturquoise-ant-190192.hostingersite.com"
+          password: "Hostingerr@1234"  # ❌ Not Secure!
+          local-dir: "./"
+          server-dir: "/public_html/myl/"  # Change if needed
+
