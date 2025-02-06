@@ -3,7 +3,7 @@ name: Deploy to Hostinger FTP
 on:
   push:
     branches:
-      - dist  # Deploys only when you push to the `dist` branch
+      - dist  # Trigger on push to the `dist` branch
 
 jobs:
   deploy:
@@ -12,23 +12,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          ref: dist
+          ref: dist  # Ensure it works on the `dist` branch
 
-      - name: Delete Existing Files on FTP Server
+      - name: Delete All Files on FTP Server and Deploy New Files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: "147.93.25.14"  # FTP server IP
           username: "u568077109.darkturquoise-ant-190192.hostingersite.com"
-          password: "Hostingerr@1234"  # Not secure, use GitHub Secrets in production
-          local-dir: "./"
-          server-dir: "/public_html/"
-          clean: true  # Deletes existing files on the FTP server before deploying new ones
-
-      - name: Deploy New Files to FTP Server
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: "147.93.25.14"
-          username: "u568077109.darkturquoise-ant-190192.hostingersite.com"
-          password: "Hostingerr@1234"  # Use GitHub Secrets in production
-          local-dir: "./"
-          server-dir: "/public_html/"
+          password: "Hostingerr@1234"  # Replace with GitHub Secrets in production
+          local-dir: "./"  # Folder in your repo that you want to upload
+          server-dir: "/public_html/"  # Deploy to `/public_html/` directory
+          clean: true  # Deletes all files in the server directory before uploading new ones
