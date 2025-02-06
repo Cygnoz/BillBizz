@@ -15,11 +15,10 @@ jobs:
           ref: dist  # Ensures the `dist` branch is used
 
       - name: Deploy Files via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4  # ✅ Correct version
         with:
           server: "ftp://147.93.25.14"
           username: "u568077109.darkturquoise-ant-190192.hostingersite.com"
-          password: "Hostingerr@1234"  # ❌ Not Secure!
+          password: "Hostingerr@1234"  # ❌ Insecure, use GitHub Secrets!
           local-dir: "./"
-          server-dir: "/public_html/myl/"  # Change if needed
-
+          server-dir: "/public_html/myl/"  # Adjust if needed
