@@ -3,7 +3,7 @@ name: Deploy to Hostinger FTP
 on:
   push:
     branches:
-      - dist  # Deploys only when you push to the `dist` branch
+      - dist
 
 jobs:
   deploy:
@@ -12,13 +12,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          ref: dist  # Ensures the `dist` branch is used
+          ref: dist
 
       - name: Deploy Files via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4  # ✅ Correct version
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: "ftp://147.93.25.14"
+          server: "147.93.25.14"  # ✅ Remove "ftp://"
           username: "u568077109.darkturquoise-ant-190192.hostingersite.com"
-          password: "Hostingerr@1234"  # ❌ Insecure, use GitHub Secrets!
+          password: "Hostingerr@1234"
           local-dir: "./"
-          server-dir: "/public_html/myl/"  # Adjust if needed
+          server-dir: "/public_html/myl/"
