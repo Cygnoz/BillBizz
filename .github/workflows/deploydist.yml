@@ -22,5 +22,4 @@ jobs:
           password: "Hostingerr@1234"  # Replace with GitHub Secrets in production
           local-dir: "./"  # Folder in your repo that you want to upload
           server-dir: "/public_html/"  # Deploy to `/public_html/` directory
-          clean: true  # Deletes all files in the server directory before uploading new ones
-          verbose: true  # Enable verbose output for debugging
+          dangerous-clean-slate: true  # Deletes all files in the server directory before uploading new ones
