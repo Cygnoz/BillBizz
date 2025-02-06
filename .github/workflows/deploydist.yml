@@ -21,4 +21,4 @@ jobs:
           username: "u568077109.darkturquoise-ant-190192.hostingersite.com"
           password: "Hostingerr@1234"
           local-dir: "./"
-          server-dir: "/public_html/myl/"
+          server-dir: "/public_html/"
