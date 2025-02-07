@@ -17,9 +17,9 @@ jobs:
       - name: Delete All Files on FTP Server and Deploy New Files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: "147.93.25.14"  # FTP server IP
-          username: "u568077109.darkturquoise-ant-190192.hostingersite.com"
-          password: "Hostingerr@1234"  # Replace with GitHub Secrets in production
+          server: "${{ secrets.FTP_SERVER }}"  # Securely using GitHub Secret
+          username: "${{ secrets.FTP_USERNAME }}"
+          password: "${{ secrets.FTP_PASSWORD }}"
           local-dir: "./"  # Folder in your repo that you want to upload
           server-dir: "/public_html/"  # Deploy to `/public_html/` directory
           dangerous-clean-slate: true  # Deletes all files in the server directory before uploading new ones
