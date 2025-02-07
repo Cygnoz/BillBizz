@@ -1,0 +1,1 @@
+import{j as t}from"./index-A_edQTkL.js";import{P as r}from"./PrinterIcon-wSfdPfNy.js";const o=()=>t.jsxs("button",{className:"p-2 gap-2 text-sm flex items-center justify-center border border-gray-500 rounded-lg text-gray-500 h-[35px]",children:[t.jsx(r,{color:"#565148",height:20,width:20})," ",t.jsx("p",{className:"font-medium",children:"Print"})]});export{o as P};

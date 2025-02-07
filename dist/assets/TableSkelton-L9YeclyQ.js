@@ -1,0 +1,1 @@
+import{j as e}from"./index-A_edQTkL.js";function d({columns:r}){return e.jsx("tr",{children:r.map(s=>e.jsx("td",{className:"py-2.5 px-4 border-y border-tableBorder",children:e.jsx("div",{className:"animate-pulse",children:e.jsx("div",{className:"h-4 bg-gray-200 rounded shimmer"})})},s))})}export{d as T};
