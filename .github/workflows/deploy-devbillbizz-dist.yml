@@ -3,7 +3,7 @@ name: Deploy to Hostinger FTP
 on:
   push:
     branches:
-      - dist  # Trigger on push to the `dist` branch
+      - dist  # Trigger on push to the s`dist` branch
 
 jobs:
   deploy:
